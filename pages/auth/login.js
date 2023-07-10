@@ -156,12 +156,12 @@ function Login() {
               <div className="flex items-center justify-between">
                 <p className="mt-4 text-base text-gray-500 sm:mt-0">
                   No account?
-                  <a
+                  <Link
                     className="text-gray-700 underline m-2"
                     href="/auth/signup"
                   >
                     Sign up
-                  </a>
+                  </Link>
                 </p>
 
                 <button
