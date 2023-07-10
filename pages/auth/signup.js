@@ -1,7 +1,35 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 
+import React, { useState, useEffect } from "react";
+
 function Signup() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {}, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ firstName, lastName, userName, email, password }),
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+  };
+
   return (
     <section className="bg-white">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
@@ -9,16 +37,16 @@ function Signup() {
           <div className="hidden lg:relative lg:block lg:p-12">
             <Link className="block text-white" href="/">
               <span className="sr-only">Home</span>
-              <img
-                  className="m-2 col-span-4"
-                  width="80"
-                  height="80"
-                  src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Quote_Mining_Fallacy_Icon.png"
-                  alt="Quoted"
-                />
-                <h1 className="col-span-4 mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-                  Quoted!
-                </h1>
+              <Image
+                className="m-2 col-span-4"
+                width="80"
+                height="80"
+                src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Quote_Mining_Fallacy_Icon.png"
+                alt="Quoted"
+              />
+              <h1 className="col-span-4 mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
+                Quoted!
+              </h1>
             </Link>
 
             <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
@@ -39,7 +67,12 @@ function Signup() {
                 href="/"
               >
                 <span className="sr-only">Home</span>
-                <img width="80" height="80" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Quote_Mining_Fallacy_Icon.png" alt="Quoted" />
+                <Image
+                  width="80"
+                  height="80"
+                  src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Quote_Mining_Fallacy_Icon.png"
+                  alt="Quoted"
+                />
               </Link>
 
               <h1 className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
