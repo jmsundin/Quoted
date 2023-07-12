@@ -1,29 +1,41 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useAuthContext } from "@/context/AuthContext";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const { user, login } = useAuthContext();
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+  });
   const [password, setPassword] = useState("");
 
-  useEffect(() => {}, []);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await response.json();
-
-    console.log(data);
+    try {
+      const user = await login(userData.email, userData.password);
+      if (user) {
+        router.push("/home");
+      }
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
+      console.log(error);
+    }
   };
 
   return (
@@ -80,7 +92,10 @@ function Login() {
               </p>
             </div>
 
-            <form action="" className="mx-auto mb-0 mt-8 max-w-md space-y-4">
+            <form
+              onSubmit={handleSubmit}
+              className="mx-auto mb-0 mt-8 max-w-md space-y-4"
+            >
               <div>
                 <label
                   htmlFor="email"
@@ -91,8 +106,13 @@ function Login() {
 
                 <div className="relative">
                   <input
+                    id="email"
+                    name="email"
+                    value={userData.email}
                     type="email"
                     className="w-full h-10 border-solid border-2 rounded-lg border-gray-200 p-4 pe-12 text-base shadow-sm"
+                    onChange={handleInputChange}
+                    required
                   />
 
                   <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -124,8 +144,13 @@ function Login() {
 
                 <div className="relative">
                   <input
+                    id="password"
+                    name="password"
+                    value={userData.password}
                     type="password"
                     className="w-full h-10 border-solid border-2 rounded-lg border-gray-200 p-4 pe-12 text-base shadow-sm"
+                    onChange={handleInputChange}
+                    required
                   />
 
                   <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -165,6 +190,7 @@ function Login() {
                 </p>
 
                 <button
+                  onSubmit={handleSubmit}
                   type="submit"
                   className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-base font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
                 >
