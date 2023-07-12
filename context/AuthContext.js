@@ -1,22 +1,25 @@
+"use client";
+
 import { createContext, useContext, useEffect, useState } from "react";
+import MyFirebase from "@/firebase/MyFirebase";
 import {
-  onAuthStateChanged,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { auth } from "../firebase/firebase";
 
-const AuthContext = createContext({});
+import { useRouter } from "next/navigation";
 
-export const useAuth = () => useContext(AuthContext);
+export const AuthContext = createContext(null);
 
-export function AuthContextProvider({ children }) {
+function AuthContextProvider({ children }) {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log(user);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged((user) => {
+    const unsubscribe = onAuthStateChanged(MyFirebase.auth, (user) => {
       if (user) {
         setUser({
           uid: user.uid,
@@ -33,22 +36,62 @@ export function AuthContextProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  const signup = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+  const signup = async (firstName, lastName, email, password) => {
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        MyFirebase.auth,
+        email,
+        password
+      );
+      const user = userCredentials.user;
+
+      setUser(user);
+    } catch (error) {
+      if (error.code === "auth/email-already-in-use") {
+        alert("Email already in use");
+      } else if (error.code === "auth/invalid-email") {
+        alert("Invalid email");
+      } else if (error.code === "auth/weak-password") {
+        alert("Weak password");
+      }
+
+      console.log(error);
+    }
   };
 
-  const login = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+  const login = async (email, password) => {
+    try {
+      const userCredentials = await signInWithEmailAndPassword(
+        MyFirebase.auth,
+        email,
+        password
+      );
+      console.log(userCredentials);
+      const user = userCredentials.user;
+      console.log(user);
+      setUser(user);
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const logout = async () => {
     setUser(null);
-    await signOut(auth);
+    try {
+      await signOut(MyFirebase.auth);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, login, signup, logout }}>
       {loading ? null : children}
     </AuthContext.Provider>
   );
 }
+
+const useAuthContext = () => useContext(AuthContext);
+
+export { AuthContextProvider, useAuthContext };
