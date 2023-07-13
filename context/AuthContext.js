@@ -1,11 +1,11 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import MyFirebase from "@/firebase/MyFirebase";
+import MyFirebase from "@/lib/MyFirebase";
 import {
+  onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
   signOut,
 } from "firebase/auth";
 
@@ -14,12 +14,14 @@ import { useRouter } from "next/navigation";
 export const AuthContext = createContext(null);
 
 function AuthContextProvider({ children }) {
+  const MyFirebaseApp = new MyFirebase();
+  
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(MyFirebase.auth, (user) => {
+    const unsubscribe = onAuthStateChanged(MyFirebaseApp.auth, (user) => {
       if (user) {
         setUser({
           uid: user.uid,
@@ -39,7 +41,7 @@ function AuthContextProvider({ children }) {
   const signup = async (firstName, lastName, email, password) => {
     try {
       const userCredentials = await createUserWithEmailAndPassword(
-        MyFirebase.auth,
+        MyFirebaseApp.auth,
         email,
         password
       );
@@ -62,7 +64,7 @@ function AuthContextProvider({ children }) {
   const login = async (email, password) => {
     try {
       const userCredentials = await signInWithEmailAndPassword(
-        MyFirebase.auth,
+        MyFirebaseApp.auth,
         email,
         password
       );
@@ -79,7 +81,7 @@ function AuthContextProvider({ children }) {
   const logout = async () => {
     setUser(null);
     try {
-      await signOut(MyFirebase.auth);
+      await signOut(MyFirebaseApp.auth);
     } catch (error) {
       console.log(error);
     }
