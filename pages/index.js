@@ -1,12 +1,25 @@
-import React from "react";
-import Login from "./auth/login";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-function HomePage() {
+import { useAuthContext } from "@/context/AuthContext";
+
+function RootPage() {
+  const { user } = useAuthContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/home");
+    } else {
+      router.push("/auth/login");
+    }
+  }, [user, router]);
+
   return (
     <React.Fragment>
-      <Login />
+        { user ? <div>Redirecting...</div> : null }
     </React.Fragment>
   );
 }
 
-export default HomePage;
+export default RootPage;
