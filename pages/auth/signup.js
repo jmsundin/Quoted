@@ -1,33 +1,50 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-import React, { useState, useEffect } from "react";
+import { useAuthContext } from "@/context/AuthContext";
 
 function Signup() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const router = useRouter();
+  const { user, signup } = useAuthContext();
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    passwordConfirmation: "",
+  });
 
-  useEffect(() => {}, []);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ firstName, lastName, userName, email, password }),
-    });
-
-    const data = await response.json();
-
-    console.log(data);
+    try {
+      const user = await signup(
+        userData.firstName,
+        userData.lastName,
+        userData.email,
+        userData.password
+      );
+      if (user) {
+        router.push("/home");
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(userData);
   };
 
   return (
@@ -84,7 +101,10 @@ function Signup() {
               </p>
             </div>
 
-            <form action="#" className="mt-8 grid grid-cols-8 gap-6">
+            <form
+              onSubmit={handleSignup}
+              className="mt-8 grid grid-cols-8 gap-6"
+            >
               <div className="col-span-8 sm:col-span-4">
                 <label
                   htmlFor="FirstName"
@@ -95,15 +115,17 @@ function Signup() {
 
                 <input
                   type="text"
-                  id="FirstName"
-                  name="first_name"
+                  id="firstName"
+                  name="firstName"
+                  value={userData.firstName}
                   className="w-full h-10 border-solid border-2 rounded-lg border-gray-200 p-4 pe-12 text-base shadow-sm"
+                  onChange={handleInputChange}
                 />
               </div>
 
               <div className="col-span-8 sm:col-span-4">
                 <label
-                  htmlFor="LastName"
+                  htmlFor="lastName"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Last Name
@@ -111,15 +133,17 @@ function Signup() {
 
                 <input
                   type="text"
-                  id="LastName"
-                  name="last_name"
+                  id="lastName"
+                  name="lastName"
+                  value={userData.lastName}
                   className="w-full h-10 border-solid border-2 rounded-lg border-gray-200 p-4 pe-12 text-base shadow-sm"
+                  onChange={handleInputChange}
                 />
               </div>
 
               <div className="col-span-8">
                 <label
-                  htmlFor="Email"
+                  htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Email
@@ -127,9 +151,12 @@ function Signup() {
 
                 <input
                   type="email"
-                  id="Email"
+                  id="email"
                   name="email"
+                  value={userData.email}
                   className="w-full h-10 border-solid border-2 rounded-lg border-gray-200 p-4 pe-12 text-base shadow-sm"
+                  onChange={handleInputChange}
+                  required
                 />
               </div>
 
@@ -143,15 +170,18 @@ function Signup() {
 
                 <input
                   type="password"
-                  id="Password"
+                  id="password"
                   name="password"
+                  value={userData.password}
                   className="w-full h-10 border-solid border-2 rounded-lg border-gray-200 p-4 pe-12 text-base shadow-sm"
+                  onChange={handleInputChange}
+                  required
                 />
               </div>
 
               <div className="col-span-8 sm:col-span-4">
                 <label
-                  htmlFor="PasswordConfirmation"
+                  htmlFor="passwordConfirmation"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Password Confirmation
@@ -159,15 +189,21 @@ function Signup() {
 
                 <input
                   type="password"
-                  id="PasswordConfirmation"
-                  name="password_confirmation"
+                  id="passwordConfirmation"
+                  name="passwordConfirmation"
+                  value={userData.passwordConfirmation}
                   className="w-full h-10 border-solid border-2 rounded-lg border-gray-200 p-4 pe-12 text-base shadow-sm"
+                  onChange={handleInputChange}
+                  required
                 />
               </div>
 
               <div className="col-span-8 sm:flex sm:items-center sm:gap-4">
-                <button className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-base font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
-                  Create an account
+                <button
+                  type="submit"
+                  className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-base font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
+                >
+                  Sign up
                 </button>
 
                 <p className="mt-4 text-base text-gray-500 sm:mt-0">

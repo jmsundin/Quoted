@@ -5,7 +5,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import Dropdown from "./Dropdow.js";
+import Dropdown from "./Dropdown";
 
 function Header() {
   return (

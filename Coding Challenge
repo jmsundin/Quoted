@@ -6,6 +6,15 @@
 The features of **Quoted** include:
 
 - Users can create an account for themselves
+    - Requirements:
+        - Check if username is unique
+        - Create a user - after Firebase Auth has been verified
+        - Create a profile in Firestore
+        - Retrieve user data and store it in AuthContext
+        - inProgress spinner while Auth is occurring
+        - handle any errors that might occur
+        - on app start, check if user is logged in
+          - if the user is logged in, render home screen with infinite scroll of Quotes
 - Users can edit their basic information
 - Users can upload their profile picture
 - Users can upload quotes to the app for everyone to see. Each entry should contain the following entities:
