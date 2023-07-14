@@ -1,9 +1,13 @@
-import "./globals.css";
+import Head from "next/head";
+
 import { AuthContextProvider } from "@/context/AuthContext";
 import { usePathname } from "next/navigation";
-import ProtectRoute from "@/components/ProtectedRoute";
+import ProtectRoute from "@/components/auth/ProtectedRoute";
 
-const noAuthRoutes = ["/", "/auth/login", "/auth/signup"];
+import Layout from "@/components/layout/Layout";
+import "../styles/globals.css";
+
+const noAuthRoutes = ["/", "/login", "/signup"];
 
 function MyApp({ Component, pageProps }) {
   const pathname = usePathname();
@@ -11,7 +15,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <AuthContextProvider>
       {noAuthRoutes.includes(pathname) ? (
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       ) : (
         <ProtectRoute>
           <Component {...pageProps} />
