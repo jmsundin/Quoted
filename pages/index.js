@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { Fragment, useEffect } from "react";
 
+import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/context/AuthContext";
 
-function RootPage() {
+function PagesRoot() {
   const { user } = useAuthContext();
   const router = useRouter();
 
@@ -11,15 +11,15 @@ function RootPage() {
     if (user) {
       router.push("/home");
     } else {
-      router.push("/auth/login");
+      router.push("/login");
     }
   }, [user, router]);
 
   return (
-    <React.Fragment>
+    <Fragment>
         { user ? <div>Redirecting...</div> : null }
-    </React.Fragment>
+    </Fragment>
   );
 }
 
-export default RootPage;
+export default PagesRoot;
