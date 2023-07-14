@@ -3,7 +3,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import MyFirebase from "@/lib/MyFirebase";
 import {
-  getAuth,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -16,10 +15,20 @@ export const AuthContext = createContext(null);
 
 function AuthContextProvider({ children }) {
   const MyFirebaseApp = new MyFirebase();
-  
+  const [authState, setAuthState] = useState({
+    token: null,
+  });
+
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const setUserAuthInfo = (authData) => {
+    const token = localStorage.setItem("token", authData.data);
+    setAuthState({
+      token: token,
+    });
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(MyFirebaseApp.auth, (user) => {
@@ -37,7 +46,7 @@ function AuthContextProvider({ children }) {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [MyFirebaseApp.auth]);
 
   const signup = async (firstName, lastName, email, password) => {
     try {
