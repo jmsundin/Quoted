@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { useRouter, usePathname } from "next/navigation";
-import { useAuthContext } from "@/context/AuthContext";
+import { useAuthContext } from "@/lib/context/AuthContext";
 
 import Link from "next/link";
 import Image from "next/image";
