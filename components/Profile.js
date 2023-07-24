@@ -1,87 +1,135 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { MdAccountCircle } from "react-icons/md";
+import MyFirebase from "@/lib/firebase/MyFirebase";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { useAuthContext } from "@/lib/context/AuthContext";
+import Post from "@/components/Post";
 
-function Profile(props) {
-  const { user } = props;
+function Profile() {
+  const router = useRouter();
+  const { user } = useAuthContext();
+  const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
+
+  const [userData, setUserData] = useState({});
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState("");
+
+  useEffect(() => {
+    const unSubsubscribe = onSnapshot(
+      query(collection(MyFirebase.db, "posts"), orderBy("createdAt", "desc")),
+      (snapshot) => {
+        const postList = snapshot.docs.map((doc) => {
+          if (doc.data().authorId === user.uid) {
+            return { ...doc.data(), uid: doc.id };
+          }
+        });
+        setPosts(postList);
+        setIsLoading(false);
+      }
+    );
+    return () => {
+      unSubsubscribe();
+    };
+  }, [user]);
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const usersCollectionRef = collection(MyFirebase.db, "users");
+      const userRef = doc(usersCollectionRef, user.uid);
+      let userDoc = null;
+      try {
+        userDoc = await getDoc(userRef);
+      } catch (e) {
+        console.error(e);
+      }
+      try {
+        setUserData(userDoc.data());
+        setProfilePhotoUrl(userDoc.data().profilePhotoUrl);
+        console.log("userDoc data", userDoc.data());
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    getUserData();
+  }, [user.uid]);
 
   return (
-    <Fragment>
-      <section className="pt-16 bg-blueGray-50">
-        <div className="w-full lg:w-4/12 px-4 mx-auto">
-          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">
-            <div className="px-6">
-              <div className="flex flex-wrap justify-center">
-                <div className="w-full px-4 flex justify-center">
-                  <div className="relative">
-                    <Image
-                      alt="profile picture"
-                      src="/default-profile-icon.png"
-                      width={150}
-                      height={150}
-                      className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
-                    />
-                  </div>
-                </div>
-                <div className="w-full px-4 text-center mt-20">
-                  <div className="flex justify-center py-4 lg:pt-4 pt-8">
-                    <div className="mr-4 p-3 text-center">
-                      <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                        22
-                      </span>
-                      <span className="text-sm text-blueGray-400">Friends</span>
-                    </div>
-                    <div className="mr-4 p-3 text-center">
-                      <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                        10
-                      </span>
-                      <span className="text-sm text-blueGray-400">Photos</span>
-                    </div>
-                    <div className="lg:mr-4 p-3 text-center">
-                      <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                        89
-                      </span>
-                      <span className="text-sm text-blueGray-400">
-                        Comments
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="text-center mt-12">
-                <h3 className="text-xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
-                  Jenna Stones
-                </h3>
-                <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
-                  <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
-                  Los Angeles, California
-                </div>
-                <div className="mb-2 text-blueGray-600 mt-10">
-                  <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
-                  Solution Manager - Creative Tim Officer
-                </div>
-                <div className="mb-2 text-blueGray-600">
-                  <i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>
-                  University of Computer Science
-                </div>
-              </div>
-              <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
-                <div className="flex flex-wrap justify-center">
-                  <div className="w-full lg:w-9/12 px-4">
-                    <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                      An artist of considerable range, Jenna the name taken by
-                      Melbourne-raised, Brooklyn-based Nick Murphy writes,
-                      performs and records all of his own music, giving it a
-                      warm, intimate feel with a solid groove structure. An
-                      artist of considerable range.
-                    </p>
-                  </div>
-                </div>
-              </div>
+    <div className="flex flex-col pt-3 mt-20 mb-4 px-3 w-full mx-auto">
+      <div className="flex flex-row justify-between flex-nowrap min-w-full">
+        <div className="flex flex-col basis-auto -mt-10">
+          {profilePhotoUrl ? (
+            <Image
+              src={profilePhotoUrl}
+              width={80}
+              height={80}
+              className="flex basis-auto w-20 h-20 rounded-full object-cover text-blue-500"
+              alt="Profile Photo"
+            />
+          ) : (
+            <MdAccountCircle className="flex basis-auto w-20 h-20 rounded-full object-cover text-blue-500" />
+          )}
+        </div>
+        <div className="flex basis-auto flex-row items-center ml-2">
+          <button
+            onClick={() => {
+              router.push("/editProfile");
+            }}
+            className="text-base text-black-900 font-bold 
+          border border-solid border-gray-500 rounded-full
+          px-4 py-1 hover:bg-blue-100 transition duration-300 ease-in-out"
+          >
+            Edit Profile
+          </button>
+        </div>
+      </div>
+      {!userData ? null : (
+        <Fragment>
+          <div className="flex flex-row font-medium">
+            {userData.displayName}
+          </div>
+          <div className="flex flex-row text-sm text-gray-500">
+            {userData.email}
+          </div>
+        </Fragment>
+      )}
+
+      <section className="flex flex-col justify-between w-full items-center mt-4">
+        <div className="flex flex-row items-center">
+          <div className="text-black-500 text-lg font-black w-full">Posts</div>
+        </div>
+        <div className="flex flex-row items-center">
+          <div className="flex flex-col gap-4">
+            <div className="my-6 max-w-[25rem] rm:max-w-[33rem] mx-auto text-xs sm:text-base">
+              {isLoading ? (
+                <p>Loading...</p>
+              ) : (
+                posts.map((post) => (
+                  <Post
+                    key={post.uid}
+                    id={post.uid}
+                    authorId={post.authorId}
+                    authorName={post.authorName}
+                    authorPhotoUrl={post.authorPhotoUrl}
+                    content={post.content}
+                    createdAt={post.createdAt}
+                    updatedAt={post.updatedAt}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>
       </section>
-    </Fragment>
+    </div>
   );
 }
 

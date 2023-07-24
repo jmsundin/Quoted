@@ -1,38 +1,25 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useAuthContext } from "@/context/AuthContext";
+import { Fragment, useState, useEffect } from "react";
+import { useAuthContext } from "@/lib/context/AuthContext";
 
-import { useRouter } from "next/navigation";
+import Head from "next/head";
 import Profile from "@/components/Profile";
 
 import MainNavigation from "@/components/layout/main-navigation";
 
 function ProfilePage() {
-  const router = useRouter();
-  const { user, signup } = useAuthContext();
-  const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    userName: "",
-    email: "",
-    password: "",
-    passwordConfirmation: "",
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  const { user } = useAuthContext();
 
   return (
-    <React.Fragment>
+    <Fragment>
+      <Head>
+        <title>Quoted | Profile</title>
+        <meta name="description" content="Quoted Profile Page" />
+      </Head>
       <MainNavigation />
-      <Profile user={user}/>
-    </React.Fragment>
+      <Profile />
+    </Fragment>
   );
 }
 
