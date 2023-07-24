@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-import { AuthContextProvider } from "@/context/AuthContext";
+import { AuthContextProvider } from "@/lib/context/AuthContext";
 import { usePathname } from "next/navigation";
 import ProtectRoute from "@/components/auth/ProtectedRoute";
 
