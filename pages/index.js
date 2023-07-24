@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
-import { useAuthContext } from "@/context/AuthContext";
+import { useAuthContext } from "@/lib/context/AuthContext";
 
 function PagesRoot() {
   const { user } = useAuthContext();
