@@ -4,22 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 
 import { useRouter } from "next/navigation";
-import { useAuthContext } from "@/context/AuthContext";
-
-const svgDownIcon = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-4 w-4"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-  >
-    <path
-      fillRule="evenodd"
-      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
+import { useAuthContext } from "@/lib/context/AuthContext";
 
 function Dropdown() {
   const router = useRouter();
@@ -42,7 +27,7 @@ function Dropdown() {
     };
   }, [dropdownRef]);
 
-  const handleOpen = () => setIsOpen(!isOpen);
+  const handleOpen = () => setIsOpen((prev) => !prev);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -76,7 +61,7 @@ function Dropdown() {
         >
           <div className="p-2">
             <Link
-              href="#"
+              href="/profile"
               className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
               role="menuitem"
             >
