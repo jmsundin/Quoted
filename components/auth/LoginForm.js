@@ -1,12 +1,12 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
+
+import { useRouter, usePathname } from "next/navigation";
+import { useAuthContext } from "@/lib/context/AuthContext";
+
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
-import { useAuthContext } from "@/context/AuthContext";
 
-function Login() {
+function LoginForm() {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -153,38 +153,36 @@ function Login() {
                     required
                   />
 
-                  <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-gray-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                  </span>
+                  {/* <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 text-gray-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    </span>
+                    */}
                 </div>
               </div>
 
               <div className="flex items-center justify-between">
                 <p className="mt-4 text-base text-gray-500 sm:mt-0">
                   No account?
-                  <Link
-                    className="text-gray-700 underline m-2"
-                    href="/auth/signup"
-                  >
+                  <Link className="text-gray-700 underline m-2" href="/signup">
                     Sign up
                   </Link>
                 </p>
@@ -205,4 +203,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginForm;

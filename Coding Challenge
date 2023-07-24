@@ -5,38 +5,53 @@
 
 The features of **Quoted** include:
 
-- Users can create an account for themselves
-    - Requirements:
-        - Check if username is unique
-        - Create a user - after Firebase Auth has been verified
-        - Create a profile in Firestore
-        - Retrieve user data and store it in AuthContext
-        - inProgress spinner while Auth is occurring
-        - handle any errors that might occur
-        - on app start, check if user is logged in
-          - if the user is logged in, render home screen with infinite scroll of Quotes
-- Users can edit their basic information
-- Users can upload their profile picture
-- Users can upload quotes to the app for everyone to see. Each entry should contain the following entities:
-- The quote
-- Name of the author
-- Profile pic of the author or a placeholder if no profile pic uploaded
-- timestamp of when the quote was created
-- A homepage where all the quotes ever written on the app are shown in descending order of their timestamp with the most recent one on top
-- Users should be logged in to use the features of the app.
-- Users can edit and delete the quotes only if they are the author of the same
+- **Authentication**:
+- Users can sign up and login.
+  - Requirements:
+    - Check if email is unique
+    - Create an account - after Firebase Auth has been verified
+    - Create a profile in Firestore
+    - Retrieve user data and store it in AuthContext
+    - handle any errors that might occur
+    - on app start, check if user is logged in
+      - if the user is logged in, render home screen with infinite scroll of Quotes
+    - Would be nice: inProgress spinner while Auth is occurring
+  - Users should be logged in to use the features of the app.
+
+- **Authorization**:
+  - Users can edit and delete the quotes only if they are the author of the same
+
+- **Home Page**:
+  - List of all the quotes / posts ever written on the app are shown in descending order of their timestamp with the most recent one on top.
+
+- **Profile Page**:
+  - Users can edit their basic information
+  - Basic information: First name, last name, display name, email, password
+- Profile picture: users can upload a profile picture
+
+- **Quotes / Posts**:
+  - Users can upload quotes to the app for everyone to see. Each entry should contain the following entities:
+    - The quote
+    - Name of the author
+    - Profile pic of the author or a placeholder if no profile pic uploaded
+    - timestamp of when the quote was created
+
+
 
 - **(Optional) 
 Bonus:** Users can like quotes and quotes should display the number of likes received.
 
-**Note:** The app should have firebase’s **Firestore** integrated. All the users and quotes should be stored in
-the firestore. Use all the CRUD operations provided by firestore for implementing the features. 
+**Notes:** 
+******************Firestore**************************
+- The app should have Firebase’s **Firestore** integrated. All the users and quotes should be stored in Firebase Firestore database. Use all the CRUD operations provided by Firestore for implementing the features. 
 - Here’s a good [Firestore starting point](https://firebase.google.com/docs/firestore/quickstart?hl=en&authuser=0)
 
-For uploading profile pictures you can use firebase’s ******************Storage.****************** 
+******************Storage*****************************
+- For uploading profile pictures you can use firebase’s 
 - Here’s a good [Firebase storage starting point](https://firebase.google.com/docs/storage?authuser=0&hl=en)
 
-Frontend framework: **Next.js**
+******************Frontend Framework******************
+  - Next.js
 - Here's a good [Next.js starting point](https://nextjs.org/learn/basics/create-nextjs-app).
 
 Use a **mobile-first approach** for this challenge. Make the app desktop-responsive only if time allows, **but it is mandatory for the app to be mobile-responsive**.
@@ -45,6 +60,27 @@ This exercise is designed to give you unlimited creative freedom as you develop 
 implementation. Feel free to use any packages/tools as you see fit; the goal is a functional mobile-responsive app
 with a reasonable amount of CSS stylings and efficient use of Firestore.
 
-****************************Time Duration:****************************
+*********************Time Duration:*******************
 
 The challenge is designed in a way that it should take 15 - 18 hours for a candidate to complete it. But we expect you to complete the challenge within 7-10 days from now, ideally.
+
+
+## My Notes
+
+### Models
+
+**User**
+- id: String
+- firstName: String
+- lastName: String
+- email: String
+- profileImage: String
+- posts: Post[]
+
+
+**Post / Quote**
+- id: String
+- userId: String
+- content: String
+- createdAt: DateTime
+- user: User
