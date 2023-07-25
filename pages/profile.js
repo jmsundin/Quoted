@@ -1,16 +1,12 @@
 "use client";
 
-import { Fragment, useState, useEffect } from "react";
-import { useAuthContext } from "@/lib/context/AuthContext";
-
+import { Fragment } from "react";
 import Head from "next/head";
 import Profile from "@/components/Profile";
 
 import MainNavigation from "@/components/layout/main-navigation";
 
 function ProfilePage() {
-  const { user } = useAuthContext();
-
   return (
     <Fragment>
       <Head>
