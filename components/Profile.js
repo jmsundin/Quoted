@@ -69,7 +69,7 @@ function Profile() {
   }, [user]);
 
   return (
-    <div className="flex flex-col pt-3 mt-20 mb-4 px-3 w-full mx-auto">
+    <div className="flex flex-col items-center justify-center pt-3 mt-20 mb-4 px-3 w-full mx-auto border-solid border-gray-100 border-2 drop-shadow-sm rounded-lg max-w-[33rem] rm:max-w-[33rem]">
       <div className="flex flex-row justify-between flex-nowrap min-w-full">
         <div className="flex flex-none flex-col -mt-10">
           {!!user.profilePhotoUrl ? (
@@ -99,11 +99,13 @@ function Profile() {
       </div>
       {userData ? (
         <Fragment>
-          <div className="flex flex-row font-medium">
-            {userData.displayName}
-          </div>
-          <div className="flex flex-row text-sm text-gray-500">
-            {userData.email}
+          <div className="flex flex-col items-start w-full text-2xl font-bold">
+            <div className="flex flex-row  font-medium">
+              {userData.displayName}
+            </div>
+            <div className="flex flex-row text-sm text-gray-500">
+              {userData.email}
+            </div>
           </div>
         </Fragment>
       ) : null}
