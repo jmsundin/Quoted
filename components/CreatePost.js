@@ -96,47 +96,49 @@ function CreatePost() {
 
   return (
     <Fragment>
-      <div className="flex flex-row pt-3 mt-20 mb-4 px-3 w-full mx-auto">
-        {profilePhotoUrl ? (
-          <Image
-            src={profilePhotoUrl}
-            width={40}
-            height={40}
-            className="flex w-20 h-20 rounded-full object-cover text-blue-500"
-            alt="Profile Photo"
-          />
-        ) : (
-          <MdAccountCircle className="flex basis-auto w-20 h-20 rounded-full object-cover text-blue-500" />
-        )}
-        <div className="flex items-center ml-2">
-          <span className="font-black">{userData.displayName}</span>
-        </div>
-      </div>
-      <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-        <form onSubmit={onSubmitHandler}>
-          <div className="flex flex-wrap">
-            <textarea
-              id="content"
-              name="content"
-              value={post.content}
-              placeholder="Quote to post..."
-              className="w-full resize-none border border-gray-300 rounded p-2"
-              rows={10}
-              onChange={handleInputChange}
+      <div className="flex flex-col pt-3 mt-20 mb-4 px-3 w-full mx-auto my-2 max-w-[40rem] text-base gap-2">
+        <div className="flex flex-row items-center basis-10 shrink-0">
+          {profilePhotoUrl ? (
+            <Image
+              src={profilePhotoUrl}
+              width={40}
+              height={40}
+              className="flex w-20 h-20 rounded-full object-cover text-blue-500"
+              alt="Profile Photo"
             />
+          ) : (
+            <MdAccountCircle className="flex basis-auto w-20 h-20 rounded-full object-cover text-blue-500" />
+          )}
+          <div className="items-center ml-2">
+            <span className="font-black">{userData.displayName}</span>
           </div>
-          <div className="flex flex-wrap mt-2 fixed right-3">
-            <button
-              type="submit"
-              className="inline-block rounded-lg bg-blue-300 px-10 py-2 
+        </div>
+        <div className="flex-auto py-10 pt-0 relative">
+          <form onSubmit={onSubmitHandler}>
+            <div className="flex flex-wrap">
+              <textarea
+                id="content"
+                name="content"
+                value={post.content}
+                placeholder="Quote to post..."
+                className="w-full resize-none border border-gray-300 rounded-lg p-2"
+                rows={10}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="flex flex-wrap mt-2 absolute right-0">
+              <button
+                type="submit"
+                className="inline-block rounded-lg bg-blue-200 text-lg font-bold px-10 py-2 
       shadow-[0_4px_9px_-4px_#3b71ca] 
       transition duration-150 ease-in-out hover:bg-blue-400 
       hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] "
-            >
-              Post
-            </button>
-          </div>
-        </form>
+              >
+                Post
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </Fragment>
   );
