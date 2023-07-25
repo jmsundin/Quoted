@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { useAuthContext } from "@/lib/context/AuthContext";
 
 function ProtectedRoute({ children }) {
@@ -14,7 +14,7 @@ function ProtectedRoute({ children }) {
     }
   }, [router, user]);
 
-  return <React.Fragment>{user ? children : null}</React.Fragment>;
+  return <Fragment>{user ? children : null}</Fragment>;
 }
 
 export default ProtectedRoute;
