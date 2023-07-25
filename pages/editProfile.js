@@ -1,9 +1,12 @@
 "use client";
 
 import Head from "next/head";
-import MainNavigation from "@/components/layout/main-navigation";
+
 import EditProfile from "@/components/EditProfile";
 import { Fragment } from "react";
+
+import MainNavigation from "@/components/layout/main-navigation";
+import CreatePostButton from "@/components/ui/CreatePostButton";
 
 function EditProfilePage() {
   return (
@@ -14,6 +17,8 @@ function EditProfilePage() {
       </Head>
       <MainNavigation />
       <EditProfile />
+
+      <CreatePostButton />
     </Fragment>
   );
 }
