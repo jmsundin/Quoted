@@ -8,6 +8,7 @@ import Post from "@/components/Post";
 function Posts() {
   const router = useRouter();
   const { user } = useAuthContext();
+  const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -18,6 +19,7 @@ function Posts() {
           return { ...doc.data(), uid: doc.id };
         });
         setPosts(postList);
+        setIsLoading(false);
       }
     );
     return () => {
@@ -29,6 +31,7 @@ function Posts() {
     <Fragment>
       <div className="flex flex-col">
         <div className="my-2 max-w-[30rem] rm:max-w-[33rem] mx-auto text-base">
+          {isLoading && <p>Loading...</p>}
           {posts.map((post) => (
             <Post
               onClick={() => router.push(`/post/${post.uid}`)}
