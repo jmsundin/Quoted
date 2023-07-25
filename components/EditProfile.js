@@ -206,12 +206,12 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="flex flex-col mx-auto pt-3 mt-3 mb-4 px-3 w-full sm:w-4/5 md:w-2/3 lg:w-1/2 xl:1/5">
+    <div className="flex flex-col justify-center mx-auto pt-3 mb-4 px-3 w-full border-solid border-gray-100 border-2 drop-shadow-sm rounded-lg max-w-[33rem] rm:max-w-[33rem]">
       <h1 className="font-black text-xl mb-3">Edit Profile</h1>
       <form onSubmit={handleSaveProfileChanges}>
         <div className="flex flex-row justify-between flex-nowrap w-full">
           <div className="relative flex flex-col w-20 h-20 -mt-2">
-            { !!user.profilePhotoUrl || !!imageUploadPreview ? (
+            {!!user.profilePhotoUrl || !!imageUploadPreview ? (
               <Image
                 src={imageUploadPreview || user.profilePhotoUrl}
                 width={100}
