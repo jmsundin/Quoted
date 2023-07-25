@@ -38,7 +38,16 @@ function MainNavigation() {
         <div className="flex-initial place-content-start gap-4">
           <Logo />
         </div>
-        {pathname === "/home" ? (
+        <div className="flex-auto justify-start gap-4 hidden sm:inline-block">
+          <Link href="/home">
+            <span className="text-start text-2xl font-bold text-gray-700">
+              Home
+            </span>
+          </Link>
+        </div>
+        {pathname === "/home" ||
+        pathname === "/profile" ||
+        pathname === "/editProfile" ? (
           <Link
             href="/create-post"
             className="flex-auto grid justify-items-end invisible sm:visible"
