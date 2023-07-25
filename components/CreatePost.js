@@ -20,15 +20,14 @@ import { MdAccountCircle } from "react-icons/md";
 function CreatePost() {
   const { user } = useAuthContext();
   const router = useRouter();
-  const postContentRef = useRef(null);
 
   const [userData, setUserData] = useState({});
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState("");
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(user.profilePhotoUrl);
   const [post, setPost] = useState({
     content: "",
     authorId: user.uid || "",
     authorName: user.displayName || "",
-    authorPhotoUrl: user.photoURL || "",
+    authorPhotoUrl: user.profilePhotoUrl || "",
     createdAt: Timestamp.fromDate(new Date()),
     updatedAt: Timestamp.fromDate(new Date()),
   });
@@ -50,23 +49,22 @@ function CreatePost() {
           return {
             ...prev,
             ...userDoc.data(),
+            authorPhotoUrl: authorPhotoUrl,
           };
         });
         setPost((prev) => {
           return {
             ...prev,
             authorName,
-            authorPhotoUrl,
           };
         });
         setProfilePhotoUrl(userDoc.data().profilePhotoUrl);
-        console.log("userDoc data", userDoc.data());
       } catch (e) {
         console.error(e);
       }
     };
     getUserData();
-  }, [user.uid, profilePhotoUrl]);
+  }, [user.uid, user.displayName, user.profilePhotoUrl]);
 
   const handleInputChange = (e) => {
     e.target.style.height = "auto";
@@ -87,7 +85,6 @@ function CreatePost() {
       await setDoc(postRef, post);
       const postDoc = await getDoc(postRef);
       if (postDoc.data()) {
-        console.log("Document data:", postDoc.data());
         router.push("/home");
       } else {
         console.log("No such document!");
