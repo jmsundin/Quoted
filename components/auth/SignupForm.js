@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import Logo from "@/components/layout/Logo";
-import { doc, getDoc, setDoc, onSnapshot, Timestamp } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-import MyFirebase from "@/lib/firebase/MyFirebase";
-
 function SignupForm() {
   const router = useRouter();
-  const { signup } = useAuthContext();
+  const { user, signup } = useAuthContext();
   const [userData, setUserData] = useState({
     profilePhotoUrl: "",
     profilePhotoPath: "",
@@ -30,9 +28,8 @@ function SignupForm() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    let user = null;
     try {
-      user = await signup(userData.email, userData.password);
+      signup(userData.firstName, userData.lastName, userData.email, userData.password);
     } catch (error) {
       console.error(error);
     }
@@ -40,22 +37,6 @@ function SignupForm() {
       return;
     } else {
       router.push("/home");
-    }
-    try {
-      const userDocRef = doc(MyFirebase.db, "users", user.uid);
-      const userDoc = {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        email: userData.email,
-        displayName: `${userData.firstName} ${userData.lastName}`,
-        profilePhotoUrl: "",
-        profilePhotoPath: "",
-        createdAt: Timestamp.fromDate(new Date()),
-        updatedAt: Timestamp.fromDate(new Date()),
-      };
-      await setDoc(userDocRef, userDoc);
-    } catch (error) {
-      console.log(error);
     }
   };
 
