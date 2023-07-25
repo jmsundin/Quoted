@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from "react";
 
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Dropdown from "../Dropdown";
 
 import { useAuthContext } from "@/lib/context/AuthContext";
 import MyFirebase from "@/lib/firebase/MyFirebase";
-import { ref, getDownloadURL } from "firebase/storage";
 import { collection, doc, getDoc } from "firebase/firestore";
 
 import Logo from "./Logo";
@@ -17,11 +16,7 @@ import { MdAccountCircle } from "react-icons/md";
 
 function MainNavigation() {
   const { user } = useAuthContext();
-  const router = useRouter();
   const pathname = usePathname();
-
-  const [userData, setUserData] = useState({});
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState("");
 
   useEffect(() => {
     const getUserData = async () => {
@@ -33,19 +28,9 @@ function MainNavigation() {
       } catch (e) {
         console.error(e);
       }
-      try {
-        setUserData(userDoc.data());
-      } catch (e) {
-        console.error(e);
-      }
-      try {
-        setProfilePhotoUrl(userDoc.data().profilePhotoUrl);
-      } catch (e) {
-        console.error(e);
-      }
     };
     getUserData();
-  }, [user.uid, profilePhotoUrl]);
+  }, [user.uid]);
 
   return (
     <header className="bg-gray-100">
@@ -73,16 +58,16 @@ function MainNavigation() {
         <div className="flex place-content-end items-center gap-4">
           <Link href="/profile" className="shrink-0 flex">
             <span className="sr-only">Profile picture</span>
-            {!profilePhotoUrl ? (
-              <MdAccountCircle className="h-12 w-12 rounded-full object-cover text-blue-500" />
-            ) : (
+            {user.profilePhotoUrl ? (
               <Image
-                src={profilePhotoUrl}
+                src={user.profilePhotoUrl}
                 width={40}
                 height={40}
                 className="flex w-12 h-12 rounded-full object-cover text-blue-500"
                 alt="Profile Photo"
               />
+            ) : (
+              <MdAccountCircle className="h-12 w-12 rounded-full object-cover text-blue-500" />
             )}
           </Link>
           <Dropdown />
