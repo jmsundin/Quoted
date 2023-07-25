@@ -4,12 +4,13 @@ import { useRouter } from "next/navigation";
 import { MdAccountCircle } from "react-icons/md";
 import MyFirebase from "@/lib/firebase/MyFirebase";
 import {
+  onSnapshot,
+  query,
   collection,
+  where,
+  orderBy,
   doc,
   getDoc,
-  onSnapshot,
-  orderBy,
-  query,
 } from "firebase/firestore";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import Post from "@/components/Post";
@@ -21,16 +22,21 @@ function Profile() {
   const [posts, setPosts] = useState([]);
 
   const [userData, setUserData] = useState({});
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState("");
 
   useEffect(() => {
     const unSubsubscribe = onSnapshot(
-      query(collection(MyFirebase.db, "posts"), orderBy("createdAt", "desc")),
+      query(
+        collection(MyFirebase.db, "posts"),
+        where("authorId", "==", user.uid),
+        orderBy("createdAt", "desc")
+      ),
       (snapshot) => {
         const postList = snapshot.docs.map((doc) => {
-          if (doc.data().authorId === user.uid) {
-            return { ...doc.data(), uid: doc.id };
-          }
+          return {
+            ...doc.data(),
+            uid: doc.id,
+            profilePhotoUrl: user.profilePhotoUrl || "",
+          };
         });
         setPosts(postList);
         setIsLoading(false);
@@ -53,25 +59,25 @@ function Profile() {
       }
       try {
         setUserData(userDoc.data());
-        setProfilePhotoUrl(userDoc.data().profilePhotoUrl);
-        console.log("userDoc data", userDoc.data());
+        user.profilePhotoUrl = userDoc.data().profilePhotoUrl;
+        user.profilePhotoPath = userDoc.data().profilePhotoPath;
       } catch (e) {
         console.error(e);
       }
     };
     getUserData();
-  }, [user.uid]);
+  }, [user]);
 
   return (
     <div className="flex flex-col pt-3 mt-20 mb-4 px-3 w-full mx-auto">
       <div className="flex flex-row justify-between flex-nowrap min-w-full">
-        <div className="flex flex-col basis-auto -mt-10">
-          {profilePhotoUrl ? (
+        <div className="flex flex-none flex-col -mt-10">
+          {!!user.profilePhotoUrl ? (
             <Image
-              src={profilePhotoUrl}
+              src={user.profilePhotoUrl}
               width={80}
               height={80}
-              className="flex basis-auto w-20 h-20 rounded-full object-cover text-blue-500"
+              className="flex-none w-20 h-20 rounded-full object-cover text-blue-500"
               alt="Profile Photo"
             />
           ) : (
@@ -91,7 +97,7 @@ function Profile() {
           </button>
         </div>
       </div>
-      {!userData ? null : (
+      {userData ? (
         <Fragment>
           <div className="flex flex-row font-medium">
             {userData.displayName}
@@ -100,11 +106,13 @@ function Profile() {
             {userData.email}
           </div>
         </Fragment>
-      )}
+      ) : null}
 
       <section className="flex flex-col justify-between w-full items-center mt-4">
-        <div className="flex flex-row items-center">
-          <div className="text-black-500 text-lg font-black w-full">Posts</div>
+        <div className="flex flex-row w-full">
+          <div className="flex mx-auto text-black-500 text-lg font-black">
+            My Posts
+          </div>
         </div>
         <div className="flex flex-row items-center">
           <div className="flex flex-col gap-4">
