@@ -5,6 +5,7 @@ import Head from "next/head";
 import Profile from "@/components/Profile";
 
 import MainNavigation from "@/components/layout/main-navigation";
+import CreatePostButton from "@/components/ui/CreatePostButton";
 
 function ProfilePage() {
   return (
@@ -15,6 +16,7 @@ function ProfilePage() {
       </Head>
       <MainNavigation />
       <Profile />
+      <CreatePostButton />
     </Fragment>
   );
 }
