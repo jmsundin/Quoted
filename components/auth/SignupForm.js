@@ -28,16 +28,23 @@ function SignupForm() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    let userDoc = null;
     try {
-      signup(userData.firstName, userData.lastName, userData.email, userData.password);
+      userDoc = signup(
+        userData.firstName,
+        userData.lastName,
+        userData.email,
+        userData.password
+      );
     } catch (error) {
       console.error(error);
     }
-    if (user?.uid === undefined) {
-      return;
-    } else {
-      router.push("/home");
+    try {
+      setUserData(userDoc.data());
+    } catch (error) {
+      console.error(error);
     }
+    router.push("/home");
   };
 
   return (
