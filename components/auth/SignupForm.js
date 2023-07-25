@@ -1,18 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Logo from "@/components/layout/Logo";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 function SignupForm() {
   const router = useRouter();
-  const { user, signup } = useAuthContext();
+  const { signup } = useAuthContext();
   const [userData, setUserData] = useState({
-    profilePhotoUrl: "",
-    profilePhotoPath: "",
+    uid: "",
+    displayName: "",
     firstName: "",
     lastName: "",
+    profilePhotoUrl: "",
+    profilePhotoPath: "",
     email: "",
     password: "",
     passwordConfirmation: "",
@@ -28,9 +29,9 @@ function SignupForm() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    let userDoc = null;
+    let user = null;
     try {
-      userDoc = signup(
+      user = signup(
         userData.firstName,
         userData.lastName,
         userData.email,
@@ -40,7 +41,12 @@ function SignupForm() {
       console.error(error);
     }
     try {
-      setUserData(userDoc.data());
+      setUserData((prev) => {
+        return {
+          ...prev,
+          ...user,
+        };
+      });
     } catch (error) {
       console.error(error);
     }
