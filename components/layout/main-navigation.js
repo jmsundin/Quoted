@@ -35,10 +35,10 @@ function MainNavigation() {
   return (
     <header className="bg-gray-100">
       <div className="flex flex-row relative w-full items-center justify-between gap-4 mx-auto max-w-screen-xl px-4 py-4 sm:px-6 lg:px-8">
-        <div className="flex-initial place-content-start gap-4">
+        <div className="flex-initial place-content-start gap-2">
           <Logo />
         </div>
-        <div className="flex-auto justify-start gap-4 hidden sm:inline-block">
+        <div className="flex-auto justify-start hidden sm:inline-block">
           <Link href="/home">
             <span className="text-start text-2xl font-bold text-gray-700">
               Home
