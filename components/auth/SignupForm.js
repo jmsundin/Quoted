@@ -29,9 +29,8 @@ function SignupForm() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    let user = null;
     try {
-      user = signup(
+      signup(
         userData.firstName,
         userData.lastName,
         userData.email,
@@ -40,17 +39,6 @@ function SignupForm() {
     } catch (error) {
       console.error(error);
     }
-    try {
-      setUserData((prev) => {
-        return {
-          ...prev,
-          ...user,
-        };
-      });
-    } catch (error) {
-      console.error(error);
-    }
-    router.push("/home");
   };
 
   return (
